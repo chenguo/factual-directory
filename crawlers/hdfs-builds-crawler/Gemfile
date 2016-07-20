@@ -1,0 +1,7 @@
+source 'https://rubygems.org' do
+  gem 'iso_country_codes', '>=0.7.4'
+end
+
+source 'http://rubygems.corp.factual.com' do
+  gem 'factual_country_ids', '>= 1.5.3'
+end

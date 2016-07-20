@@ -1,7 +1,11 @@
 # Index API Schema
 
+Notes:
+* by default, ```url``` is used as `id`
+
 ```json
 {
+  "id": "unique_identifier",
   "url": "http://wiki.corp.factual.com/",
   "keywords": ["wiki"],
   "description": "Factual Wiki",
