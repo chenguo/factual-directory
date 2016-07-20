@@ -1,3 +1,4 @@
+require 'date'
 require 'json'
 require 'net/http'
 require 'uri'
@@ -13,6 +14,15 @@ def format_country(country)
   country_name = country.gsub(/scarecrow/i, '')
   # Add spacing
   country_name.gsub(/([a-z])([A-Z])/, '\1 \2')
+end
+
+def extract_timestamp(ls_line)
+  pieces = ls_line.split(/\s/)
+  date = pieces[-3]
+  time = pieces[-2]
+  puts "#{date} #{time}"
+  d = DateTime.strptime("#{date} #{time}", "%Y-%m-%d %H:%M")
+  return d.to_time.to_i
 end
 
 def extract_file_path(ls_line)
@@ -41,10 +51,12 @@ def list_files()
     file_path = extract_file_path(line)
     file_info = extract_build_name(file_path)
     if !file_info.nil?
+      timestamp = extract_timestamp(line)
       country = file_info[0]
       file_name = file_info[1]
       if is_prod_build(file_name)
         files << {
+          :timestamp => timestamp,
           :country => country,
           :build_name => file_name,
           :build_path => file_path
@@ -85,7 +97,8 @@ def make_index(build)
     :id => build[:build_name],
     :url => get_build_url(build[:build_path]),
     :keywords => keywords + DEFAULT_KEYWORDS,
-    :description => make_desc(version, build[:country])
+    :description => make_desc(version, build[:country]),
+    :timestamp => build[:timestamp]
   }
 end
 
