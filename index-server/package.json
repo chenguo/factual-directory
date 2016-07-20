@@ -4,9 +4,11 @@
   "description": "Indexing API server for Factual Directory",
   "author": "Chen Guo <chen@factual.com>",
   "dependencies": {
+    "async": "^2.0.0",
     "express": "4.14.0",
     "lodash": "3.10.1",
-    "pg": "4.4.3"
+    "pg": "4.4.3",
+    "valid-url": "^1.0.9"
   },
   "publishConfig": {
     "registry": "http://npm.prod.factual.com"
