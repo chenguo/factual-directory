@@ -103,6 +103,7 @@ def post_indexes(indexes)
   req.body = JSON.generate(indexes)
   resp = http.request(req)
   puts resp
+  puts "Status #{resp.code}"
   puts resp.body
 end
 

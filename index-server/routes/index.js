@@ -12,11 +12,16 @@ module.exports = function(app) {
       if (err) throw err;
       numProcessed = results.length
       numError = processErrs.length
-      res.send({
+      payload = {
         numProcessed: numProcessed,
         numError: numError,
         errors: processErrs
-      })
+      };
+      if (numError != 0) {
+        res.status(400).send(payload);
+      } else {
+        res.send(payload)
+      }
     });
   }));
 

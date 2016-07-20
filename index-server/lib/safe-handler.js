@@ -4,9 +4,10 @@ module.exports = function(fn) {
       fn(req, res);
     } catch(err) {
       if (err instanceof Error) {
-        res.json({error: err.stack});
+        statusCode = err.status || 500;
+        res.status(statusCode).send({error: err.stack});
       } else {
-        res.json({error: err});
+        res.status(statusCode).send({error: err});
       }
     }
   }
