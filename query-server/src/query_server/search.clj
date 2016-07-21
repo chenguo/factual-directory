@@ -1,7 +1,9 @@
 (ns query-server.search
   (:require [clojure.walk :refer [keywordize-keys]]
             [schema.core :as s]
-            [query-server.db :as db])
+            [query-server.config :as conf]
+            [query-server.db :as db]
+            [query-server.lucene :as lucene])
   (:import
    java.lang.Long
    java.util.Date
@@ -55,7 +57,16 @@
    :results (format-docs docs)
    :timestamp (.getTime (Date.))})
 
-(defn search [qstr]
+(defn search-lucene [qstr]
+  (let [ids (lucene/query qstr)]
+    (if (seq ids)
+      (-> (db/query-ids ids)
+          score-docs
+          sort-docs
+          (format-resp qstr))
+      (format-resp [] qstr))))
+
+(defn search-pg [qstr]
   (let [tokens (tokenize qstr)]
     (-> qstr
         tokenize
@@ -63,3 +74,5 @@
         score-docs
         sort-docs
         (format-resp qstr))))
+
+(def search search-lucene)

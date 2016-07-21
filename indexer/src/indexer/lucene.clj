@@ -22,19 +22,16 @@
     (IndexWriter. dir config)))
 
 (defn- make-text-field [name value store?]
-  (let [value (text/format-string value)
-        store (if store? Field$Store/YES Field$Store/NO)]
+  (let [store (if store? Field$Store/YES Field$Store/NO)]
     (TextField. name value store)))
 
 (defn- make-document [entry]
-  (doto (Document.)
-    (.add (make-text-field"id" (:id entry) true))
-    (.add (make-text-field "title" (:title entry) true))
-    (.add (make-text-field "description" (:description entry) true))
-    (.add (make-text-field "keywords" (join " " (:keywords entry)) true))
-    (.add (make-text-field "manual_tags" (join " " (:manual_tags entry)) true))
-    (.add (make-text-field "corpus" (:corpus entry) true))
-    (.add (LongPoint. "timestamp" (long-array [(:timestamp entry)])))))
+  (let [entry-text (-> entry
+                       text/combine-text-fields
+                       text/format-string)]
+    (doto (Document.)
+      (.add (make-text-field "id" (:id entry) true))
+      (.add (make-text-field "_search" entry-text false)))))
 
 (defn- add-document [writer doc]
   (.addDocument ^IndexWriter writer doc))

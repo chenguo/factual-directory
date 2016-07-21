@@ -17,16 +17,26 @@
    :user (:user db-config)
    :password (:password db-config)})
 
-(def db (make-db (:db conf/config)))
-(def index-table (:index-table (:db conf/config)))
+(def ^:private db (make-db (:db conf/config)))
+(def ^:private index-table (:index-table (:db conf/config)))
 (println db)
 
-(defn make-query [tokens]
+(defn- make-query [tokens]
   (let [qstr (str "SELECT * FROM " index-table " LIMIT 10")
         values nil]
     [qstr]))
 
 (defn query [qtokens]
   (let [sql-query (make-query qtokens)
+        results (j/query db sql-query)]
+    results))
+
+(defn- make-id-query [ids]
+  (let [place-holders (clojure.string/join "," (repeat (count ids) "?"))
+        qstr (str "SELECT * FROM " index-table " WHERE id IN (" place-holders ")")]
+    (concat [qstr] ids)))
+
+(defn query-ids [ids]
+  (let [sql-query (make-id-query ids)
         results (j/query db sql-query)]
     results))
