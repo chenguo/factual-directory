@@ -21,7 +21,7 @@ const searchTerms = [
   'the red chen jumps over the lazy dog'
 ]
 
-const Searchbar = (props) => (
+const SearchBar = (props) => (
   <div style={searchStyles.wrapper}>
     <img style={searchStyles.icon} src="/resources/factual_logo_notext.png"/>
     <AutoComplete
@@ -35,4 +35,4 @@ const Searchbar = (props) => (
   </div>
 );
 
-export default Searchbar;
+export default SearchBar;

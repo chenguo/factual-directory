@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchbarContainer from './containers/SearchbarContainer'
+import SearchBarContainer from './containers/SearchBarContainer'
 import ResourceDrawerContainer from './containers/ResourceDrawerContainer'
 import NavBarContainer from './containers/NavBarContainer'
 import SearchResultsContainer from './containers/SearchResultsContainer'
@@ -25,7 +25,7 @@ const Home = () => (
     < NavBarContainer />
     < ResourceDrawerContainer />
     <div style={styles.searchArea}>
-      < SearchbarContainer />
+      < SearchBarContainer />
       < SearchResultsContainer />
     </div>
   </div>

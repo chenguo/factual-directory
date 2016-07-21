@@ -9,11 +9,11 @@ app.get('/', function (req, res) {
 })
 
 app.get('/search', function(req, res) {
-	qstr = req.query.qstr;
-	reqParams = {qstr: qstr};
-	request({url: 'http://10.20.10.146:4000/search', qs:reqParams}, function(err, resp, body) {
-      res.send(body);
-	})
+  qstr = req.query.qstr;
+  reqParams = {qstr: qstr};
+  request({url: 'http://10.20.10.146:4000/search', qs:reqParams}, function(err, resp, body) {
+    res.send(body);
+  })
 })
 
 var server = app.listen(8081, function () {

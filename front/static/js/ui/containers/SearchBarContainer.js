@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import Searchbar from '../Searchbar'
+import SearchBar from '../SearchBar'
 import getResults from '../../actions/searchActions'
 
 const mapStateToProps = (state) => {
@@ -13,9 +13,9 @@ const mapDispatchToProps = (dispatch) => {
 	}
 }
 
-const SearchbarContainer = connect(
+const SearchBarContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Searchbar)
+)(SearchBar)
 
-export default SearchbarContainer
+export default SearchBarContainer
