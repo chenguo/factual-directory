@@ -30,7 +30,7 @@ const SearchBar = (props) => (
       dataSource={searchTerms}
       maxSearchResults={5}
       fullWidth={true}
-      onUpdateInput={ props.doSearch }
+      onNewRequest={ props.doSearch }
     />
   </div>
 );
