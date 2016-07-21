@@ -3,9 +3,7 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 
 
-const ResultRow = (props) => {
-  console.log('????')
-return (
+const ResultRow = (props) => (
   <Card>
     <CardHeader title={props.description} subtitle={props.url} />
     <Divider />
@@ -14,6 +12,6 @@ return (
     </CardText>
   </Card>
 );
-}
+
 
 export default ResultRow;
