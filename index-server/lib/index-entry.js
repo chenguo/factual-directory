@@ -8,7 +8,7 @@ function validateId(entry) {
 }
 
 function isString(s) {
-  return typeof s == 'string';
+  return typeof s == 'string' && s.length > 0;
 }
 
 function isNull(s) {
@@ -16,7 +16,11 @@ function isNull(s) {
 }
 
 function validateString(entry, field) {
-  return isNull(entry[field]) || isString(entry[field]);
+  return isNull(entry[field]) || isString(entry[field]) ;
+}
+
+function validateNonNullString(entry, field) {
+  return isString(entry[field]);
 }
 
 function validateArrayOfStrings(entry, field) {
@@ -53,11 +57,12 @@ var validators = {
   corpus: validateString,
   description: validateString,
   timestamp: validateTimestamp,
+  source: validateNonNullString,
 }
 
 function validateAndFormat(entry) {
   errs = []
-  fields = ['id', 'url', 'keywords', 'corpus', 'description', 'manual_tags', 'timestamp'];
+  fields = ['id', 'url', 'keywords', 'corpus', 'description', 'manual_tags', 'timestamp', 'source'];
   fields.forEach(function(field) {
     validator = validators[field];
     if (!validator(entry, field)) {
@@ -88,8 +93,6 @@ module.exports = {
         entries.push(entry);
       }
     });
-    console.log(entries[0]);
-    console.log(entries[1]);
     cb(null, entries, errors);
   },
 
