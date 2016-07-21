@@ -2,22 +2,38 @@ body {
 	margin: 0
 }
 
-a {
+.resource-links a {
 	color: black;
 }
 
-a:link {
+.resource-links a:link {
     text-decoration: none;
 }
 
-a:visited {
+.resource-links a:visited {
     text-decoration: none;
 }
 
-a:hover {
+.resource-links a:hover {
     text-decoration: underline;
 }
 
-a:active {
+.resource-links a:active {
     text-decoration: underline;
+}
+
+.result-links a:link {
+    text-decoration: none;
+}
+
+.result-links a:visited {
+    text-decoration: none;
+}
+
+.result-links a:hover {
+    text-decoration: none;
+}
+
+.result-links a:active {
+    text-decoration: none;
 }

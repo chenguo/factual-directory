@@ -22,7 +22,7 @@ const ResourceDrawer = (props) => (
         iconElementRight={<IconButton onClick={props.toggleDrawer}><NavigationClose /></IconButton>}
         style={drawerStyles.appbar}
       />
-      <List>
+      <List className={"resource-links"} >
         <a target="_blank" href="https://factual.namely.com/"> < ListItem primaryText={"Namely"} secondaryText={"a"} /> </a>
         <a target="_blank" href="https://www.expensify.com/signin"> < ListItem primaryText={"Expensify"} secondaryText={"a"} /> </a>
         <a target="_blank" href="https://app.greenhouse.io/"> < ListItem primaryText={"Greenhouse"} secondaryText={"a"} /> </a>
