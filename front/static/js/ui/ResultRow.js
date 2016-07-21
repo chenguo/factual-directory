@@ -15,42 +15,74 @@ let styles = {
   subRow: {
     width: '100%'
   },
-  description: {
+  descriptionText: {
     color: 'grey',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis'
+  },
+  descriptionChips: {
+    display: 'flex',
+    overflow: 'scroll',
+    whiteSpace: 'nowrap'  
+  },
+  chip: {
+    margin: 4,
   }
 }
 
-const ResultRow = (props) => {
-  let manualTags = props.manual_tags.length > 0 ?
-    props.manual_tags.map( (tag, i) => (
-      <Chip onRequestDelete={(event) => console.log('deleted')}
-            onTouchTap={(event) => console.log('clicked')}
-            style={styles.chip}
-            key={i} >
-        {tag}
-      </Chip>
-    )) :
-    null
-  return (
-    <a target="_blank" href={props.url}>
-      <Card style={styles.resultCard} >
-        <CardHeader title={props.description} 
-                    subtitle={props.title} 
-                    showExpandableButton={true} 
-                    actAsExpander={true}/>
-        <Divider />
-        <CardText style={styles.description}>
-          {props.keywords.join(', ')}
-        </CardText>
-        <CardText expandable={true}>
-          {manualTags}
-        </CardText>
-      </Card>
-    </a>
-  );
+class ResultRow extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      expanded: false,
+    };
+  }
+
+  handleExpandChange(expanded) {
+    this.setState({expanded: expanded});
+  };
+
+  render() {
+    let fixedTags = (this.state.expanded ? [] : this.props.manual_tags).concat(this.props.keywords).map( (tag, i) => (
+        <Chip onTouchTap={(event) => console.log('clicked')}
+              style={styles.chip}
+              key={i} >
+          {tag}
+        </Chip>
+      ))
+    let manualTags = this.props.manual_tags.length > 0 ?
+      this.props.manual_tags.map( (tag, i) => (
+        <Chip onRequestDelete={(event) => console.log('deleted')}
+              onTouchTap={(event) => console.log('clicked')}
+              style={styles.chip}
+              key={i} >
+          {tag}
+        </Chip>
+      )) :
+      null
+
+    return (
+      
+        <Card expanded={this.state.expanded} 
+              style={styles.resultCard} 
+              onExpandChange={(expand) => this.handleExpandChange(expand)} >
+          <CardHeader title={<a target="_blank" href={this.props.url}>{this.props.description}</a>} 
+                      subtitle={this.props.title} 
+                      showExpandableButton={true} 
+                      actAsExpander={true}/>
+          <Divider />
+          <CardText style={styles.descriptionChips} >
+            {fixedTags}
+          </CardText>
+          <CardText expandable={true}>
+            {manualTags}
+          </CardText>
+        </Card>
+      
+    );
+  }
 }
 
 export default ResultRow;
