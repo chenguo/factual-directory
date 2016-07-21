@@ -1,0 +1,8 @@
+{
+  "user": "user",
+  "password": "pw",
+  "database": "db_name",
+  "port": 5432,
+  "host": "postges.host",
+  "index-table": "index"
+}
