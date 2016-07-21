@@ -1,4 +1,5 @@
 .lein-repl-history
 .nrepl-port
 target
-db_config.clj
+config.json
+

@@ -1,6 +1,6 @@
 (ns query-server.db
   (:require [clojure.java.jdbc :as j]
-            [query-server.db-config :refer [db-config]]))
+            [query-server.config :as conf]))
 
 
 (extend-protocol j/IResultSetReadColumn
@@ -9,16 +9,20 @@
     (vec (.getArray pgobj))))
 
 (defn- make-subname [db-config]
-  (str "//" (:hostname db-config) ":" (:port db-config) "/" (:database db-config)))
+  (str "//" (:host db-config) ":" (:port db-config) "/" (:database db-config)))
 
-(def db
+(defn- make-db [db-config]
   {:subprotocol "postgresql"
    :subname (make-subname db-config)
-   :user (:username db-config)
+   :user (:user db-config)
    :password (:password db-config)})
 
+(def db (make-db (:db conf/config)))
+(def index-table (:index-table (:db conf/config)))
+(println db)
+
 (defn make-query [tokens]
-  (let [qstr (str "SELECT * FROM " (:index-table db-config) " LIMIT 10")
+  (let [qstr (str "SELECT * FROM " index-table " LIMIT 10")
         values nil]
     [qstr]))
 

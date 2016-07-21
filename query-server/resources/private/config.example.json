@@ -1,0 +1,11 @@
+{
+  "db": {
+    "user": "user",
+    "password": "pw",
+    "database": "db_name",
+    "port": 5432,
+    "host": "postgres.host",
+    "index-table": "index",
+    "pool-size": 25
+  }
+}

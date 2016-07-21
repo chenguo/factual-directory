@@ -8,4 +8,5 @@
   :ring {:handler query-server.handler/app}
   :uberjar-name "server.jar"
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
-                   :plugins [[lein-ring "0.9.7"]]}})
+                   :plugins [[lein-ring "0.9.7"]]}}
+  :resource-paths ["resources/private"])
