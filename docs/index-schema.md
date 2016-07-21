@@ -9,7 +9,8 @@ Notes:
   "id": "unique_identifier",
   "url": "http://wiki.corp.factual.com/",
   "keywords": ["wiki"],
-  "description": "Factual Wiki",
+  "title": "Factual Wiki",
+  "description": "Repository of Factual internal data",
   "corpus": "Body of document, should be empty for top level domains like the wiki",
   "manual_tags": [],
   "timestamp": 1469054237

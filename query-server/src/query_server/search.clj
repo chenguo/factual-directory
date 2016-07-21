@@ -18,6 +18,7 @@
   {:id s/Str
    :url s/Str
    :source s/Str
+   :title s/Str
    :description s/Str
    :corpus s/Str
    :keywords [s/Str]
@@ -46,7 +47,9 @@
 
 (def score-docs identity)
 (def sort-docs identity)
-(def format-docs identity)
+
+(defn format-docs [docs]
+  (mapv #(assoc %1 :title (:description %1)) docs))
 
 (defn format-resp [docs qstr]
   {:query qstr
