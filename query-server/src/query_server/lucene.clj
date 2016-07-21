@@ -28,6 +28,7 @@
 (defn query [qstr]
   (let [query (.parse parser qstr)
         docs (.search searcher query 100)]
+    (println "qstr" qstr "matchs" (.totalHits docs))
     (mapv (fn [score-doc]
             (let [doc-n (.doc score-doc)
                   doc (.doc searcher doc-n)]

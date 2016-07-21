@@ -58,7 +58,9 @@
    :timestamp (.getTime (Date.))})
 
 (defn search-lucene [qstr]
-  (let [ids (lucene/query qstr)]
+  (let [tokens (tokenize qstr)
+        fuzzy-tokens (mapcat #(vector % (str % "~") (str % "*")) tokens)
+        ids (lucene/query (clojure.string/join " " fuzzy-tokens))]
     (if (seq ids)
       (-> (db/query-ids ids)
           score-docs
