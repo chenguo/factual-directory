@@ -6,7 +6,7 @@ var CONN_FIELDS = ['user', 'database', 'password', 'port', 'host', 'ssl', 'appli
 var CONN_CFG = _.pick(config.dbConfig, CONN_FIELDS);
 
 var TABLE = config.dbConfig.indexTable;
-var INSERT_FIELDS = ['id', 'url', 'keywords', 'description', 'corpus', 'manual_tags', 'timestamp', 'source'];
+var INSERT_FIELDS = ['id', 'url', 'title', 'description', 'keywords', 'corpus', 'manual_tags', 'timestamp', 'source'];
 var INSERT_QUERY = "INSERT INTO " + TABLE + " (" + INSERT_FIELDS.join(",") + ") VALUES";
 var DELETE_SRC_QUERY = "DELETE FROM " + TABLE + " WHERE source = ($1)";
 

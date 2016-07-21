@@ -48,8 +48,7 @@
 (def score-docs identity)
 (def sort-docs identity)
 
-(defn format-docs [docs]
-  (mapv #(assoc %1 :title (:description %1)) docs))
+(defn format-docs [docs] docs)
 
 (defn format-resp [docs qstr]
   {:query qstr

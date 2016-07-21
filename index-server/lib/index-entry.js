@@ -52,17 +52,18 @@ function validateTimestamp(entry, field) {
 var validators = {
   id: validateId,
   url: validateUrl,
+  description: validateString,
+  title: validateString,
   keywords: validateArrayOfStrings,
   manual_tags: validateArrayOfStrings,
   corpus: validateString,
-  description: validateString,
   timestamp: validateTimestamp,
   source: validateNonNullString,
 }
 
 function validateAndFormat(entry) {
   errs = []
-  fields = ['id', 'url', 'keywords', 'corpus', 'description', 'manual_tags', 'timestamp', 'source'];
+  fields = ['id', 'url', 'title', 'description','keywords', 'corpus', 'manual_tags', 'timestamp', 'source'];
   fields.forEach(function(field) {
     validator = validators[field];
     if (!validator(entry, field)) {
