@@ -22,7 +22,7 @@ app.get('/search', function(req, res) {
 app.post('/feedback', function(req, res) {
   console.log(req.body)
   request.post({
-    url: 'http://10.20.10.146:4001/search/feedback',
+    url: 'http://10.20.10.146:4000/search/feedback',
     headers: {
       'Content-Type': 'application/json'
     },
