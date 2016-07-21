@@ -5,7 +5,7 @@
             Document LongPoint TextField Field$Store]
            org.apache.lucene.index.IndexWriter
            org.apache.lucene.index.IndexWriterConfig
-           org.apache.lucene.analysis.standard.StandardAnalyzer
+           org.apache.lucene.analysis.en.EnglishAnalyzer
            org.apache.lucene.store.MMapDirectory))
 
 (defn- make-path
@@ -18,7 +18,7 @@
   [index-path]
   (let [path (make-path index-path)
         dir (MMapDirectory. path)
-        config (IndexWriterConfig. (StandardAnalyzer.))]
+        config (IndexWriterConfig. (EnglishAnalyzer.))]
     (IndexWriter. dir config)))
 
 (defn- make-text-field [name value store?]
