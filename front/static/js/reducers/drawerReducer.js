@@ -1,4 +1,4 @@
-let initialState = {'open': true}
+let initialState = {'open': false}
 
 const drawerReducer = (state = initialState, action) => {
   switch (action.type) {

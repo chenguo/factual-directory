@@ -21,7 +21,7 @@ const searchTerms = [
   'the red chen jumps over the lazy dog'
 ]
 
-const Searchbar = () => (
+const Searchbar = (props) => (
   <div style={searchStyles.wrapper}>
     <img style={searchStyles.icon} src="/resources/factual_logo_notext.png"/>
     <AutoComplete
@@ -30,7 +30,7 @@ const Searchbar = () => (
       dataSource={searchTerms}
       maxSearchResults={5}
       fullWidth={true}
-      onUpdateInput={ getResults }
+      onUpdateInput={ props.doSearch }
     />
   </div>
 );

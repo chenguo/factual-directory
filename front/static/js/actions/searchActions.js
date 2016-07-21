@@ -1,13 +1,12 @@
 const getResults = (searchTerms, dataSource) => {
-	console.log(searchTerms)
-	let searchEndpoint = ''
+	let searchEndpoint = '/search?qstr=hello'
 	return (dispatch) => {
+		console.log(searchTerms)
 		fetch(searchEndpoint, {
-      		method: 'POST',
-      		body: JSON.stringify(searchTerms),
-      		credentials: 'include'
+      		method: 'GET'
     	})
 		.then(response => { 
+			console.log(response)
 			if (response.status === 200) {
 				return response.json();
 			}

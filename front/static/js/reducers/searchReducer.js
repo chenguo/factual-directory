@@ -4,7 +4,7 @@ const searchReducer = (state = initialState, action) => {
   switch (action.type) {
     case "RECEIVE_SEARCH_RESULTS":
       return {
-        results: action.results,
+        results: action.results.results,
         init: false
       }
     default:

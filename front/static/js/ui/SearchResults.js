@@ -6,7 +6,9 @@ const SearchResults = (props) => {
     return null
   } else {
     return (
-      props.results.map( (result, i) => <ResultRow {...result} key={i}/>)
+      <div>
+        {props.results.map( (result, i) => <ResultRow {...result} key={i}/> )}
+      </div>
     )
   }
 }
