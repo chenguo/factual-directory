@@ -50,7 +50,8 @@
 (def score-docs identity)
 (def sort-docs identity)
 
-(defn format-docs [docs] docs)
+(defn format-docs [docs]
+  (mapv #(select-keys % (keys Document)) docs))
 
 (defn format-resp [docs qstr]
   {:query qstr
