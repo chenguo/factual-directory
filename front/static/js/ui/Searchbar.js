@@ -1,10 +1,11 @@
 import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
+import getResults from '../actions/searchActions'
+
 
 const searchStyles = {
   wrapper: {
-    width: "60%",
-    margin: "auto",
+    width: "100%",
     display: "flex"  
   },
   icon: {
@@ -29,6 +30,7 @@ const Searchbar = () => (
       dataSource={searchTerms}
       maxSearchResults={5}
       fullWidth={true}
+      onUpdateInput={ getResults }
     />
   </div>
 );
