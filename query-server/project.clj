@@ -8,7 +8,8 @@
                  [org.apache.lucene/lucene-core "6.1.0"]
                  [org.apache.lucene/lucene-analyzers-common "6.1.0"]
                  [org.apache.lucene/lucene-queryparser "6.1.0"]]
-  :ring {:handler query-server.handler/app}
+  :ring {:handler query-server.handler/app
+         :port 4000}
   :uberjar-name "server.jar"
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
                    :plugins [[lein-ring "0.9.7"]]}}
