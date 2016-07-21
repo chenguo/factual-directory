@@ -12,11 +12,9 @@ const styles = {
 };
 
 const App = () => (
-	<MuiThemeProvider>
-	  <div style={styles.container}>
-	    < Home />
-	  </div>
-	</MuiThemeProvider>
+  <div style={styles.container}>
+    < Home />
+  </div>
 );
 
 export default App;

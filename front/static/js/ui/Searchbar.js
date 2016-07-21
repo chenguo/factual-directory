@@ -1,7 +1,16 @@
 import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+const searchStyles = {
+  wrapper: {
+    width: "60%",
+    margin: "auto",
+    display: "flex"  
+  },
+  icon: {
+    marginRight: "15px"
+  }
+}
 
 const searchTerms = [
   'chen is cool',
@@ -12,15 +21,15 @@ const searchTerms = [
 ]
 
 const Searchbar = () => (
-  <div>
-  <MuiThemeProvider>
+  <div style={searchStyles.wrapper}>
+    <img style={searchStyles.icon} src="/resources/factual_logo_notext.png"/>
     <AutoComplete
-      floatingLabelText="Search factual stuff!"
+      floatingLabelText="Search factual"
       filter={AutoComplete.fuzzyFilter}
       dataSource={searchTerms}
       maxSearchResults={5}
+      fullWidth={true}
     />
-  </MuiThemeProvider>
   </div>
 );
 

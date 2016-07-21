@@ -1,10 +1,11 @@
 import React from 'react';
 import Searchbar from './Searchbar'
+import ResourceDrawerContainer from './containers/ResourceDrawerContainer'
+import NavBarContainer from './containers/NavBarContainer'
 
 const styles = {
   container: {
     textAlign: 'center',
-    paddingTop: 200,
     height: '60vh',
     backgroundColor: 'white',
   },
@@ -16,7 +17,8 @@ const styles = {
 
 const Home = () => (
   <div style={Object.assign(styles.container, styles.h)}>
-    <h1> Factual Directory </h1>
+    < NavBarContainer />
+    < ResourceDrawerContainer />
     < Searchbar />
   </div>
 );
