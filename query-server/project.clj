@@ -5,5 +5,7 @@
                  [metosin/compojure-api "1.1.1"]]
   :ring {:handler query-server.handler/app}
   :uberjar-name "server.jar"
-  :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
+  :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
+                                  [org.clojure/java.jdbc "0.6.2-alpha1"]
+                                  [org.postgresql/postgresql "9.4-1201-jdbc41"]]
                    :plugins [[lein-ring "0.9.7"]]}})

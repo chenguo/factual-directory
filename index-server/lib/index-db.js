@@ -33,7 +33,7 @@ function formatInsertValue(indexEntry, field) {
   } else if (value) {
     value = value.toString();
   } else {
-    value = 'DEFAULT';
+    value = ''
   }
   return value;
 }

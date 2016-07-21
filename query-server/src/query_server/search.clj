@@ -1,23 +1,40 @@
 (ns query-server.search
-  (:require [schema.core :as s])
+  (:require [clojure.walk :refer [keywordize-keys]]
+            [schema.core :as s]
+            [query-server.db :as db])
   (:import
+   java.lang.Long
    java.util.Date
    java.util.StringTokenizer)
 )
 
 (s/defschema Echo
   {:query s/Str
-   :tokens [java.lang.String]
-   :timestamp java.lang.Long
+   :tokens [s/Str]
+   :timestamp Long
    })
 
-(def Search Echo)
+(s/defschema Document
+  {:id s/Str
+   :url s/Str
+   :source s/Str
+   :description s/Str
+   :corpus s/Str
+   :keywords [s/Str]
+   :manual_tags [s/Str]
+   :timestamp Long
+   })
+
+(s/defschema Search
+  {:query s/Str
+   :timestamp Long
+   :results [Document]})
 
 (defn- tokenize [qstr]
   (loop [tokens []
          token-stream (StringTokenizer. qstr)]
     (if (.hasMoreTokens token-stream)
-      (recur (conj tokens (.nextToken token-stream))
+      (recur (conj tokens (.toLowerCase (.nextToken token-stream)))
              token-stream)
       tokens)))
 
@@ -27,5 +44,20 @@
      :tokens tokens
      :timestamp (.getTime (Date.))}))
 
+(def score-docs identity)
+(def sort-docs identity)
+(def format-docs identity)
+
+(defn format-resp [docs qstr]
+  {:query qstr
+   :results (format-docs docs)
+   :timestamp (.getTime (Date.))})
+
 (defn search [qstr]
-  (echo qstr))
+  (let [tokens (tokenize qstr)]
+    (-> qstr
+        tokenize
+        db/query
+        score-docs
+        sort-docs
+        (format-resp qstr))))
