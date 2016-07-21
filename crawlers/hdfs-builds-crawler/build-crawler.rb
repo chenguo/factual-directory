@@ -8,6 +8,7 @@ BASE_PATH = "hdfs://dev/apps/extract/poi"
 INDEX_API = "http://localhost:3000"
 URL_PREFIX = "http://stitch-dev.corp.factual.com/hdfs-redirect?hdfs_path="
 DEFAULT_KEYWORDS = ["prod", "production", "build"]
+CRAWLER_ID = "hdfs_build"
 
 
 def format_country(country)
@@ -20,7 +21,6 @@ def extract_timestamp(ls_line)
   pieces = ls_line.split(/\s/)
   date = pieces[-3]
   time = pieces[-2]
-  puts "#{date} #{time}"
   d = DateTime.strptime("#{date} #{time}", "%Y-%m-%d %H:%M")
   return d.to_time.to_i
 end
@@ -85,20 +85,32 @@ def get_build_hw_name(build_name)
   end
 end
 
+def make_keywords(country, version, hawaiian_name)
+  begin
+    dataset = Factual_Country_Ids.get_dataset(country)
+    view_stable = Factual_Country_Ids.get_view_stable(country)
+    view_edge = Factual_Country_Ids.get_view_edge(country)
+    cc = Factual_Country_Ids.get_code(country)
+  rescue
+  end
+  return [country, version, hawaiian_name, dataset, view_stable, view_edge, cc].reject(&:nil?)
+end
+
 def make_desc(version, country)
-  return "#{version} production build for #{country}"
+  return "#{country} #{version} production build"
 end
 
 def make_index(build)
   version = get_build_version(build[:build_name])
   hawaiian_name = get_build_hw_name(build[:build_name])
-  keywords = [build[:country], version, hawaiian_name].reject(&:nil?)
+  keywords = make_keywords(build[:country], version, hawaiian_name)
   return {
     :id => build[:build_name],
     :url => get_build_url(build[:build_path]),
     :keywords => keywords + DEFAULT_KEYWORDS,
     :description => make_desc(version, build[:country]),
-    :timestamp => build[:timestamp]
+    :timestamp => build[:timestamp],
+    :source => CRAWLER_ID
   }
 end
 
@@ -106,6 +118,14 @@ def index_builds(builds)
   builds.map do |build|
     index = make_index(build)
   end
+end
+
+def clean_indexes()
+  uri = URI.parse(INDEX_API + '/indexes/source/' + CRAWLER_ID)
+  http = Net::HTTP.new(uri.host, uri.port)
+  req = Net::HTTP::Delete.new(uri.request_uri)
+  resp = http.request(req)
+  puts resp.body
 end
 
 def post_indexes(indexes)
@@ -123,5 +143,6 @@ end
 if __FILE__ == $0
   builds = list_files()
   indexes = index_builds(builds)
+  clean_indexes()
   post_indexes(indexes)
 end
