@@ -16,6 +16,14 @@ app.get('/search', function(req, res) {
   })
 })
 
+// app.get('/feedback', function(req, res) {
+//   reqParams = {
+//     searchTerms: req.query.searchTerms,
+//     clickedResult: req.query.clickedResult
+//   }
+//   console.log('would technically submit feedback')
+// })
+
 var server = app.listen(8081, function () {
 
   var host = server.address().address

@@ -26,6 +26,11 @@ let styles = {
     overflow: 'scroll',
     whiteSpace: 'nowrap'  
   },
+  manulTagEmptyState: {
+    textAlign: 'center',
+    color: 'grey',
+    margin: 0
+  },
   chip: {
     margin: 4,
   }
@@ -35,9 +40,10 @@ class ResultRow extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      expanded: false,
-    };
+    let localRowState = {
+      expanded: false 
+    }
+    this.state = Object.assign({}, localRowState, props)
   }
 
   handleExpandChange(expanded) {
@@ -61,17 +67,22 @@ class ResultRow extends React.Component {
           {tag}
         </Chip>
       )) :
-      null
+      <p style={styles.manulTagEmptyState}> No manual tags yet :( </p>
+    let resultTitle = 
+      <a target="_blank" 
+          href={this.props.url} 
+          onClick={() => this.props.submitClick(this.props.id)}>
+        {this.props.title}
+      </a>
 
     return (
-
         <Card expanded={this.state.expanded}
               style={styles.resultCard}
               onExpandChange={(expand) => this.handleExpandChange(expand)} >
-          <CardHeader title={<a target="_blank" href={this.props.url}>{this.props.title}</a>}
+          <CardHeader title={resultTitle}
                       subtitle={this.props.description}
                       showExpandableButton={true}
-                      actAsExpander={true}/>
+                      actAsExpander={true} />
           <Divider />
           <CardText style={styles.descriptionChips} >
             {fixedTags}
