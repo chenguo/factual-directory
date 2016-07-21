@@ -7,12 +7,13 @@ require "factual_country_ids"
 BASE_PATH = "hdfs://dev/apps/extract/poi"
 INDEX_API = "http://localhost:3000"
 URL_PREFIX = "http://stitch-dev.corp.factual.com/hdfs-redirect?hdfs_path="
-DEFAULT_KEYWORDS = ["prod", "production", "build"]
+DEFAULT_KEYWORDS = ["prod", "production", "build", "batchsummary"]
 CRAWLER_ID = "hdfs_build"
 
 
 def format_country(country)
   country_name = country.gsub(/scarecrow/i, '')
+    .gsub(/\d+/, '')
   # Add spacing
   country_name.gsub(/([a-z])([A-Z])/, '\1 \2')
 end
