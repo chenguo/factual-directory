@@ -19,6 +19,8 @@
 
 (def ^:private db (make-db (:db conf/config)))
 (def ^:private index-table (:index-table (:db conf/config)))
+(def ^:private query-table (:query-table (:db conf/config)))
+(def ^:private annotation-table (:annotation-table (:db conf/config)))
 (println db)
 
 (defn- make-query [tokens]
@@ -40,3 +42,12 @@
   (let [sql-query (make-id-query ids)
         results (j/query db sql-query)]
     results))
+
+(defn- make-timestamp-query [query timestamp]
+  (let [qstr (str "INSERT INTO " query-table " (timestamp, qstr) VALUES (to_timestamp(?),?)")
+        sec-timestamp (int (/ timestamp 1000))]
+    [qstr sec-timestamp query]))
+
+(defn save-search [qstr timestamp]
+  (let [sql-query (make-timestamp-query qstr timestamp)]
+    (j/query db sql-query)))

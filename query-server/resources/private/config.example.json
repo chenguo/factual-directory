@@ -6,6 +6,8 @@
     "port": 5432,
     "host": "postgres.host",
     "index-table": "index",
+    "query-table": "query",
+    "annot-table": "annotation",
     "pool-size": 25
   },
   "document-index": "/path/to/documents/lucene/index"

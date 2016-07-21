@@ -47,35 +47,44 @@
      :tokens tokens
      :timestamp (.getTime (Date.))}))
 
-(def score-docs identity)
-(def sort-docs identity)
+(defn- save-qstr [qstr timestamp]
+  ; Swallow exceptions
+  (try
+    (db/save-search qstr timestamp)))
 
-(defn format-docs [docs]
+(def ^:private score-docs identity)
+(def ^:private sort-docs identity)
+
+(defn- format-docs [docs]
   (mapv #(select-keys % (keys Document)) docs))
 
-(defn format-resp [docs qstr]
+(defn- format-resp [docs qstr timestamp]
   {:query qstr
    :results (format-docs docs)
-   :timestamp (.getTime (Date.))})
+   :timestamp timestamp})
 
-(defn search-lucene [qstr]
+(defn- search-lucene [qstr timestamp]
   (let [tokens (tokenize qstr)
-        fuzzy-tokens (mapcat #(vector % (str % "~") (str % "*")) tokens)
+        ; temporarily disable fuzzy matching
+        fuzzy-tokens (mapcat #(vector % #_(str % "~") (str % "*")) tokens)
         ids (lucene/query (clojure.string/join " " fuzzy-tokens))]
     (if (seq ids)
       (-> (db/query-ids ids)
           score-docs
           sort-docs
-          (format-resp qstr))
+          (format-resp qstr timestamp))
       (format-resp [] qstr))))
 
-(defn search-pg [qstr]
+(defn- search-pg [qstr timestamp]
   (let [tokens (tokenize qstr)]
     (-> qstr
         tokenize
         db/query
         score-docs
         sort-docs
-        (format-resp qstr))))
+        (format-resp qstr timestamp))))
 
-(def search search-lucene)
+(defn search [qstr]
+  (let [timestamp (.getTime (Date.))]
+    (future (save-qstr qstr timestamp))
+    (search-lucene qstr timestamp)))

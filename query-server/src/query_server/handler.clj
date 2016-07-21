@@ -11,6 +11,9 @@
         :summary "Handle search query"
         (ok (search/search qstr)))
 
+   (POST "/search-results" []
+         :query-params [qstr :-
+
    (GET "/echo" []
         :query-params [qstr :- String]
         :return search/Echo
