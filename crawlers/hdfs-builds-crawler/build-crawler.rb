@@ -71,6 +71,7 @@ def get_build_url(build_path)
   url = URL_PREFIX + build_path
 end
 
+# Parse build version from build name
 def get_build_version(build_name)
   match = /(\d+.\d+$)/.match(build_name)
   if match
@@ -78,6 +79,7 @@ def get_build_version(build_name)
   end
 end
 
+# Parse Hawaiian name from build name
 def get_build_hw_name(build_name)
   match = /-([^aeiou][aeiou][^aeiou][aeiou][^aeiou][aeiou])-/.match(build_name)
   if match
@@ -96,8 +98,13 @@ def make_keywords(country, version, hawaiian_name)
   return [country, version, hawaiian_name, dataset, view_stable, view_edge, cc].reject(&:nil?)
 end
 
-def make_desc(version, country)
-  return "#{country} #{version} production build"
+def make_title(version, country, hawaiian_name)
+  return "#{version} #{country} #{hawaiian_name} Production Build"
+end
+
+def make_description(version, country, timestamp)
+  date_str = Date.strptime(timestamp.to_s, '%s').strftime('%b %d %Y')
+  "HDFS link for #{version} #{country} batch summary production build, built on #{date_str}"
 end
 
 def make_index(build)
@@ -108,7 +115,8 @@ def make_index(build)
     :id => build[:build_name],
     :url => get_build_url(build[:build_path]),
     :keywords => keywords + DEFAULT_KEYWORDS,
-    :description => make_desc(version, build[:country]),
+    :title => make_title(version, build[:country], hawaiian_name),
+    :description => make_description(version, build[:country], build[:timestamp]),
     :timestamp => build[:timestamp],
     :source => CRAWLER_ID
   }
@@ -143,6 +151,7 @@ end
 if __FILE__ == $0
   builds = list_files()
   indexes = index_builds(builds)
+  # For now, wipe indexes and push
   clean_indexes()
   post_indexes(indexes)
 end
