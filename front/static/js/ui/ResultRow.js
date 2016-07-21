@@ -64,13 +64,13 @@ class ResultRow extends React.Component {
       null
 
     return (
-      
-        <Card expanded={this.state.expanded} 
-              style={styles.resultCard} 
+
+        <Card expanded={this.state.expanded}
+              style={styles.resultCard}
               onExpandChange={(expand) => this.handleExpandChange(expand)} >
-          <CardHeader title={<a target="_blank" href={this.props.url}>{this.props.description}</a>} 
-                      subtitle={this.props.title} 
-                      showExpandableButton={true} 
+          <CardHeader title={<a target="_blank" href={this.props.url}>{this.props.title}</a>}
+                      subtitle={this.props.description}
+                      showExpandableButton={true}
                       actAsExpander={true}/>
           <Divider />
           <CardText style={styles.descriptionChips} >
@@ -80,7 +80,7 @@ class ResultRow extends React.Component {
             {manualTags}
           </CardText>
         </Card>
-      
+
     );
   }
 }
