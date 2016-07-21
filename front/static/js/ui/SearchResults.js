@@ -9,16 +9,16 @@ let styles = {
 }
 
 const SearchResults = (props) => {
-  console.log(props.results)
-  if (props.results.length == 0) {
+  if (props.searchResult.results.length == 0) {
     return null
   } else {
-    let resultIDs = props.results.map( (result) => result.id )
-    let qstr = props.query
-    let timestamp = props.timestamp
+    let resultIDs = props.searchResult.results.map( (result) => result.id )
+    let qstr = props.searchResult.query
+    let timestamp = props.searchResult.timestamp
+    console.log(props.searchResult)
     return (
       <div style={styles.wrapper} className={'result-links'}>
-        {props.results.map( (result, i) => 
+        {props.searchResult.results.map( (result, i) => 
           <ResultRow {...result} 
                       key={i}
                       submitClick={ (clickedID) => props.submitClick(qstr, timestamp, clickedID, resultIDs)} /> 

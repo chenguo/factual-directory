@@ -3,8 +3,9 @@ import SearchResults from '../SearchResults'
 import { sendResultClick } from '../../actions/searchActions'
 
 const mapStateToProps = (state) => {
+  console.log('container', state.searchReducer.results)
 	return {
-		results: state.searchReducer.results
+		searchResult: state.searchReducer.results
 	}
 }
 

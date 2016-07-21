@@ -1,8 +1,11 @@
 var express = require('express');
-var app = express();
+var bodyParser = require('body-parser')
 var request = require('request');
+var app = express();
 
 app.use(express.static('static'))
+app.use(bodyParser.json());
+// app.use(express.json());
 
 app.get('/', function (req, res) {
    res.sendFile( __dirname + "/views/home.html");
@@ -16,13 +19,19 @@ app.get('/search', function(req, res) {
   })
 })
 
-// app.get('/feedback', function(req, res) {
-//   reqParams = {
-//     searchTerms: req.query.searchTerms,
-//     clickedResult: req.query.clickedResult
-//   }
-//   console.log('would technically submit feedback')
-// })
+app.post('/feedback', function(req, res) {
+  console.log(req.body)
+  request.post({
+    url: 'http://10.20.10.146:4001/search/feedback',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(req.body)
+  }, function(err, resp, body) {
+    console.log("posted got", resp.statusCode)
+  })
+  console.log('would technically submit feedback')
+})
 
 var server = app.listen(8081, function () {
 

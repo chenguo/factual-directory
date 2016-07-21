@@ -1,11 +1,17 @@
-let initialState = {results: [], init: true}
+let initialState = {
+  results: {
+    results: [],
+    timestamp: 0,
+    query: ''
+  }, 
+  init: true
+}
 
 const searchReducer = (state = initialState, action) => {
   switch (action.type) {
     case "RECEIVE_SEARCH_RESULTS":
-      console.log(action.results)
       return {
-        results: action.results.results,
+        results: action.results,
         init: false
       }
     default:

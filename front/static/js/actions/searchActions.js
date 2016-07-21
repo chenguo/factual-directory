@@ -25,14 +25,18 @@ export const getResults = (searchTerms) => {
   }
 }
 
-export const sendResultClick = (qstr, timestamp, resultIDs, clickedID) => {
-	let endpoint = '/feedback?'
-	let body = JSON.stringify({ qstr, timestamp, resultIDs, clickedID })
+export const sendResultClick = (query, timestamp, ids, selected) => {
+	let endpoint = '/feedback'
+  let headers = new Headers({
+    'Content-Type': 'application/json'
+  })
+  console.log(query, timestamp)
+	let body = JSON.stringify({ query, timestamp, ids, selected })
 	return (dispatch) => {
-		console.log("sent feedback", body)
-	// 	fetch(endpoint, {
-	// 		method: 'POST',
-	// 		body: body
-	// 	})
+		fetch(endpoint, {
+			method: 'POST',
+      headers: headers, 
+			body: body
+		})
 	} 
 }
