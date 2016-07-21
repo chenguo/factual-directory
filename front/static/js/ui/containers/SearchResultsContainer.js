@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-    submitClick: (qstr, timestamp, clickedID, resultIDs) => dispatch(sendResultClick(qstr, timestamp, clickedID, resultIDs))
+    submitClick: (qstr, timestamp, clickedID, resultIDs) => dispatch(sendResultClick(qstr, timestamp, resultIDs, clickedID))
 	}
 }
 
