@@ -51,15 +51,15 @@ class ResultRow extends React.Component {
   };
 
   render() {
-    let fixedTags = (this.state.expanded ? [] : this.props.manual_tags).concat(this.props.keywords).map( (tag, i) => (
+    let fixedTags = (this.state.expanded ? [] : this.state.manual_tags).concat(this.state.keywords).map( (tag, i) => (
         <Chip onTouchTap={(event) => console.log('clicked')}
               style={styles.chip}
               key={i} >
           {tag}
         </Chip>
       ))
-    let manualTags = this.props.manual_tags.length > 0 ?
-      this.props.manual_tags.map( (tag, i) => (
+    let manualTags = this.state.manual_tags.length > 0 ?
+      this.state.manual_tags.map( (tag, i) => (
         <Chip onRequestDelete={(event) => console.log('deleted')}
               onTouchTap={(event) => console.log('clicked')}
               style={styles.chip}
@@ -70,9 +70,9 @@ class ResultRow extends React.Component {
       <p style={styles.manulTagEmptyState}> No manual tags yet :( </p>
     let resultTitle = 
       <a target="_blank" 
-          href={this.props.url} 
-          onClick={() => this.props.submitClick(this.props.id)}>
-        {this.props.title}
+          href={this.state.url} 
+          onClick={() => this.props.submitClick(this.state.id)}>
+        {this.state.title}
       </a>
 
     return (
@@ -80,7 +80,7 @@ class ResultRow extends React.Component {
               style={styles.resultCard}
               onExpandChange={(expand) => this.handleExpandChange(expand)} >
           <CardHeader title={resultTitle}
-                      subtitle={this.props.description}
+                      subtitle={this.state.description}
                       showExpandableButton={true}
                       actAsExpander={true} />
           <Divider />
