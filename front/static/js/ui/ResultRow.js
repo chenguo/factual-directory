@@ -87,7 +87,7 @@ class ResultRow extends React.Component {
           <CardText style={styles.descriptionChips} >
             {fixedTags}
           </CardText>
-          <CardText expandable={true}>
+          <CardText expandable={true} style={{ paddingTop: 0 }} >
             {manualTags}
           </CardText>
         </Card>
