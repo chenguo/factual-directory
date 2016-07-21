@@ -10,9 +10,9 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-	return {
+  return {
     submitClick: (qstr, timestamp, clickedID, resultIDs) => dispatch(sendResultClick(qstr, timestamp, resultIDs, clickedID))
-	}
+  }
 }
 
 const SearchResultsContainer = connect(

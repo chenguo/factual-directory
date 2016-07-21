@@ -88,3 +88,21 @@
   (let [timestamp (.getTime (Date.))]
     (future (save-qstr qstr timestamp))
     (search-lucene qstr timestamp)))
+
+(s/defschema Feedback
+  {:query s/Str
+   :timestamp Long
+   :selected s/Str
+   :ids [s/Str]})
+
+(defn- save-feedback [f]
+  (let [selected (:selected f)
+        other-results (filter #(not= selected %) (:ids f))
+        ;; Store only 3 of the bad results
+        store-results (take 3 other-results)]
+    (db/save-search-feedback (:query f) (:timestamp f) selected store-results)))
+
+(defn feedback [f]
+  (future (save-feedback f))
+  {})
+

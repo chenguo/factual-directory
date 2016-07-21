@@ -51,3 +51,44 @@
 (defn save-search [qstr timestamp]
   (let [sql-query (make-timestamp-query qstr timestamp)]
     (j/query db sql-query)))
+
+(defn- save-selected [query timestamp selected]
+  "Entry may already be present, so do insert then update"
+  (let [sec-timestamp (int (/ timestamp 1000))
+        with-query (str "WITH qid AS (SELECT qid FROM query WHERE "
+                        " qstr = ? AND timestamp = to_timestamp(?)), "
+                        "iid AS (SELECT iid FROM index WHERE id = ?)")
+        qstr (str with-query " INSERT INTO " annotation-table " (qid, selected, iid) VALUES "
+                  "((SELECT qid FROM qid), true, (SELECT iid FROM iid))")]
+    (try (j/query db [qstr query sec-timestamp selected])
+         (catch Exception e))
+    (let [qstr (str with-query " UPDATE " annotation-table " SET selected = true WHERE "
+                    "qid = (SELECT qid FROM qid) AND iid = (SELECT iid FROM iid)")]
+      (try (j/query db [qstr query sec-timestamp selected])
+           (catch Exception e
+             (.printStackTrace e))))))
+
+(defn- save-unselected
+  "If this has a collision (i.e. already marked selected)
+   just let it fail"
+  [query timestamp id]
+  (let [sec-timestamp (int (/ timestamp 1000))
+        qstr (str "WITH qid AS (SELECT qid FROM query WHERE qstr = ? AND timestamp = to_timestamp(?)), "
+                  "iid AS (SELECT iid FROM index WHERE id = ?) "
+                  "INSERT INTO " annotation-table " (qid, selected, iid) VALUES "
+                  "((SELECT qid FROM qid), false, (SELECT iid from iid))")]
+    (try (j/query db [qstr query sec-timestamp id])
+         (catch Exception e))))
+
+(defn save-search-feedback
+  "Store user interaction with search results. Save
+   the selected result and a sample of unselected results.
+   Note because the user can select multiple things from
+   results, the IDs here may be already present in the DB.
+
+   We can update an unselected entry to selected, but we
+   should never update a selected entry to unselected."
+  [qstr timestamp selected unselected-ids]
+  (save-selected qstr timestamp selected)
+  (doseq [unsel-id unselected-ids]
+    (save-unselected qstr timestamp unsel-id)))

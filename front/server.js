@@ -14,23 +14,26 @@ app.get('/', function (req, res) {
 app.get('/search', function(req, res) {
   qstr = req.query.qstr;
   reqParams = {qstr: qstr};
-  request({url: 'http://10.20.10.146:4000/search', qs:reqParams}, function(err, resp, body) {
+  request({url: 'http://10.20.10.146:4001/search', qs:reqParams}, function(err, resp, body) {
     res.send(body);
   })
 })
 
 app.post('/feedback', function(req, res) {
-  console.log(req.body)
+  console.log(req.body.selected)
+  payload = {
+    query: req.body.query,
+    timestamp: req.body.timestamp,
+    selected: req.body.selected,
+    ids: req.body.ids
+  }
   request.post({
-    url: 'http://10.20.10.146:4000/search/feedback',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(req.body)
-  }, function(err, resp, body) {
-    console.log("posted got", resp.statusCode)
+    url: 'http://10.20.10.146:4001/search/feedback',
+    json: true,
+    body: payload
+  }, function(err) {
+    res.send(err);
   })
-  console.log('would technically submit feedback')
 })
 
 var server = app.listen(8081, function () {
