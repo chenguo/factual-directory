@@ -1,3 +1,4 @@
+var async = require('async');
 var config = require('../config.json')
 var pg = require('pg');
 var _ = require('lodash');
@@ -7,7 +8,8 @@ var CONN_CFG = _.pick(config.dbConfig, CONN_FIELDS);
 
 var TABLE = config.dbConfig.indexTable;
 var INSERT_FIELDS = ['id', 'url', 'title', 'description', 'keywords', 'corpus', 'manual_tags', 'timestamp', 'source'];
-var INSERT_QUERY = "INSERT INTO " + TABLE + " (" + INSERT_FIELDS.join(",") + ") VALUES";
+var INSERT_QUERY = "INSERT INTO " + TABLE + " (" + INSERT_FIELDS.join(',') + ") VALUES"
+var SELECT_QUERY = "SELECT id FROM " + TABLE + " WHERE id = ($1)";
 var DELETE_SRC_QUERY = "DELETE FROM " + TABLE + " WHERE source = ($1)";
 
 console.log(CONN_CFG);
@@ -38,27 +40,51 @@ function formatInsertValue(indexEntry, field) {
   return value;
 }
 
-function makeQuery(indexes) {
+function makeFindRowQuery(index) {
+  return {
+    q: SELECT_QUERY,
+    values: [index.id]
+  }
+}
+
+function makeInsertQuery(index) {
+  vars = [];
   values = [];
-  valueVars = [];
-  indexes.forEach(function(index, i) {
-    rowVars = [];
-    INSERT_FIELDS.forEach(function(field) {
-      value = formatInsertValue(index, field);
-      values.push(value);
-      if (field == 'timestamp') {
-        rowVars.push('to_timestamp($' + values.length + ')');
-      } else {
-        rowVars.push('$' + values.length);
-      }
-    });
-    valueVars.push('(' + rowVars.join(',') + ')');
+  INSERT_FIELDS.forEach(function(field) {
+    value = formatInsertValue(index, field);
+    values.push(value);
+    if (field == 'timestamp') {
+      vars.push('to_timestamp($' + values.length + ')');
+    } else {
+      vars.push('$' + values.length);
+    }
   });
-  q = INSERT_QUERY + " " + valueVars.join(', ');
+  q = INSERT_QUERY + ' (' + vars.join(',') + ')';
   return {
     q: q,
     values: values
-  };
+  }
+}
+
+function makeUpdateQuery(index) {
+  setVars = [];
+  values = [];
+  INSERT_FIELDS.forEach(function(field) {
+    value = formatInsertValue(index, field);
+    values.push(value);
+    if (field == 'timestamp') {
+      setVars.push(field + ' = to_timestamp($' + values.length + ')');
+    } else {
+      setVars.push(field + ' = $' + values.length);
+    }
+  });
+  idVar = '$' + (values.length + 1);
+  values.push(index.id)
+  q = "UPDATE " + TABLE + " SET " + setVars.join(',')  + " WHERE id = " + idVar
+  return {
+    q: q,
+    values: values
+  }
 }
 
 function makeDeleteSourceQuery(source) {
@@ -68,15 +94,46 @@ function makeDeleteSourceQuery(source) {
   }
 }
 
+function findRow(client, row, cb) {
+  query = makeFindRowQuery(row);
+  client.query(query.q, query.values, cb);
+}
+
+function updateRow(client, row, cb) {
+  query = makeUpdateQuery(row)
+  client.query(query.q, query.values, function(err, results) {
+    cb(err);
+  });
+}
+
+function insertRow(client, row, cb) {
+  query = makeInsertQuery(row)
+  client.query(query.q, query.values, function(err, results) {
+    cb(err);
+  });
+}
+
+function upsertRows(client, indexes, cb) {
+  async.mapLimit(indexes, 50, function(row, callback) {
+    findRow(client, row, function(err, result) {
+      if (err) return callback(err);
+      if (result.rowCount > 0) {
+        updateRow(client, row, callback);
+      } else {
+        insertRow(client, row, callback);
+      }
+    });
+  }, cb);
+}
+
 module.exports = {
 
   writeDB: function(indexes, cb) {
-    query = makeQuery(indexes);
     pg.connect(CONN_CFG, function(err, client, done) {
       if (err) return cb(err);
-      client.query(query.q, query.values, function(err, result) {
+      upsertRows(client, indexes, function(err, results) {
         done();
-        cb(err, result);
+        cb(err, results);
       });
     });
   },

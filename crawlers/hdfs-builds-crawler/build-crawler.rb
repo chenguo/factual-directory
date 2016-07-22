@@ -129,6 +129,7 @@ def index_builds(builds)
   end
 end
 
+# This should no longer be used
 def clean_indexes()
   uri = URI.parse(INDEX_API + '/indexes/source/' + CRAWLER_ID)
   http = Net::HTTP.new(uri.host, uri.port)
@@ -152,7 +153,5 @@ end
 if __FILE__ == $0
   builds = list_files()
   indexes = index_builds(builds)
-  # For now, wipe indexes and push
-  clean_indexes()
   post_indexes(indexes)
 end

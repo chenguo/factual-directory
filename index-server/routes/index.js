@@ -1,4 +1,3 @@
-var async = require('async');
 var safeHandler = require('../lib/safe-handler');
 var IndexDB = require('../lib/index-db');
 var IndexEntry = require('../lib/index-entry');
@@ -24,7 +23,7 @@ module.exports = function(app) {
       if (processErrs.length > 0) {
         cb(null, payload, 400);
       } else if (results.length > 0) {
-        IndexDB.writeDB(entries, function(err, results) {
+        IndexDB.writeDB(entries, function(err) {
           if (err) return cb(err);
           else cb(null, payload);
         });
@@ -34,18 +33,19 @@ module.exports = function(app) {
     });
   }));
 
-  app.delete('/indexes/source/:source', safeHandler(function(req, res, cb) {
-    if (req.params) {
-      source = req.params.source;
-    }
-    if (source) {
-      IndexDB.deleteBySource(source, function(err, results) {
-        if (err) return cb(err);
-        else cb(null, {deletedSource: source});
-      });
-    } else {
-      cb(new Error("No source to delete"));
-    }
-  }));
+  // This is disabled
+  // app.delete('/indexes/source/:source', safeHandler(function(req, res, cb) {
+  //   if (req.params) {
+  //     source = req.params.source;
+  //   }
+  //   if (source) {
+  //     IndexDB.deleteBySource(source, function(err, results) {
+  //       if (err) return cb(err);
+  //       else cb(null, {deletedSource: source});
+  //     });
+  //   } else {
+  //     cb(new Error("No source to delete"));
+  //   }
+  // }));
 
 };
