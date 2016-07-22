@@ -46,6 +46,10 @@ class ResultRow extends React.Component {
     this.state = Object.assign({}, localRowState, props)
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState(nextProps)
+  }
+
   handleExpandChange(expanded) {
     this.setState({expanded: expanded});
   };

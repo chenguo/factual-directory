@@ -16,7 +16,7 @@ const SearchResults = (props) => {
     let resultIDs = props.searchResult.results.map( (result) => result.id )
     let qstr = props.searchResult.query
     let timestamp = props.searchResult.timestamp
-    console.log(props.searchResult)
+    console.log('ui', props.searchResult)
     return (
       <div style={styles.wrapper} className={'result-links'}>
         {props.searchResult.results.map( (result, i) => 
