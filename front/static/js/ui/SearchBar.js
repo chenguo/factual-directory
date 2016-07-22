@@ -14,13 +14,7 @@ const searchStyles = {
   }
 }
 
-const searchTerms = [
-  'chen is cool',
-  'chen sucks',
-  'chen guo',
-  'buttercup guo',
-  'the red chen jumps over the lazy dog'
-]
+const searchTerms = []
 
 const SearchBar = (props) => (
   <div style={searchStyles.wrapper}>
