@@ -5,7 +5,7 @@ let styles = {
   wrapper: {
     height: '100%',
     overflow: 'scroll',
-    maxHeight: '82vh'
+    maxHeight: '81vh'
   }
 }
 

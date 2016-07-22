@@ -5,10 +5,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 
 const NavBar = (props) => (
-  <AppBar
-    iconElementRight={<FlatButton onClick={props.toggleDrawer} label="Tags" />}
-    onLeftIconButtonTouchTap={props.toggleDrawer}
-  />
+  <AppBar />
 );
 
 export default NavBar;
