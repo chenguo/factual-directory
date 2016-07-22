@@ -66,7 +66,7 @@
           score-docs
           sort-docs
           (format-resp qstr timestamp))
-      (format-resp [] qstr))))
+      (format-resp [] qstr timestamp))))
 
 (defn- search-pg [qstr timestamp]
   (-> qstr
@@ -89,7 +89,7 @@
 
 (defn- save-feedback [f]
   (let [selected (:selected f)
-        other-results (filter #(not= selected %) (:ids f))
+        other-results (take-while #(not= selected %) (:ids f))
         ;; Store only 3 of the bad results
         store-results (take 3 other-results)]
     (db/save-search-feedback (:query f) (:timestamp f) selected store-results)))
@@ -97,4 +97,3 @@
 (defn feedback [f]
   (future (save-feedback f))
   {})
-
