@@ -31,8 +31,8 @@ app.post('/feedback', function(req, res) {
     url: 'http://10.20.10.146:4001/search/feedback',
     json: true,
     body: payload
-  }, function(err) {
-    res.send(err);
+  }, function(err, resp, body) {
+    res.send(resp);
   })
 })
 
