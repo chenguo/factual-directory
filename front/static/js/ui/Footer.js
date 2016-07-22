@@ -13,7 +13,7 @@ let styles = {
     paddingRight: '20%',
     paddingTop: '15px',
     paddingBottom: '25px',
-    marginTop: '3vh'
+    marginTop: '3vh',
   }
 }
 
@@ -38,14 +38,7 @@ const Footer = () => (
         <Subheader> Engineering </Subheader>
         <a target="_blank" href="hdfs-dev.prod.factual.com/nn_browsedfscontent.jsp"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"HDFS"} /> </a>        
         <a target="_blank" href="http://marathon.la.prod.factual.com/ui/"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Marathon"} /> </a>
-      </List>
-    </div>
-    <div className="footer-col">
-      <List>
-        <Subheader style={{color: 'lightgrey'}} > Engineering </Subheader>
-        <a target="_blank" href="http://jobtracker-dev.la.prod.factual.com:19888/jobhistory"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Hadoop Job History"} /> </a>
-        <a target="_blank" href="http://vineyard.prod.factual.com/"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Vineyard"} /> </a>       
-        <a target="_blank" href="http://jobtracker-dev.la.prod.factual.com:8088/cluster"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Hadoop Job Tracker"} /> </a>
+        <a target="_blank" href="http://vineyard.prod.factual.com/"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Vineyard"} /> </a>             
       </List>
     </div>
     <div className="footer-col">
@@ -54,6 +47,13 @@ const Footer = () => (
         <a target="_blank" href="http://mesos.la.prod.factual.com/"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Mesos"} /> </a>
         <a target="_blank" href="http://dashboard.prod.factual.com/"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Dashboard"} /> </a>      
         <a target="_blank" href="http://stitch.corp.factual.com/"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Stitch"} /> </a>
+      </List>
+    </div>
+    <div className="footer-col">
+      <List>
+        <Subheader style={{color: 'lightgrey'}} > Engineering </Subheader>
+        <a target="_blank" href="http://jobtracker-dev.la.prod.factual.com:19888/jobhistory"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Hadoop Job History"} /> </a>
+        <a target="_blank" href="http://jobtracker-dev.la.prod.factual.com:8088/cluster"> < ListItem innerDivStyle={{paddingTop: '8px', fontSize: '14px', paddingBottom: '8px'}} primaryText={"Hadoop Job Tracker"} /> </a>
       </List>
     </div>
   </Paper>

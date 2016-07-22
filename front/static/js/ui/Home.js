@@ -8,7 +8,7 @@ import Footer from './Footer'
 const styles = {
   container: {
     textAlign: 'center',
-    minHeight: '72vh',
+    minHeight: '70vh',
     maxHeight: '90vh',
     backgroundColor: 'white'
   },
