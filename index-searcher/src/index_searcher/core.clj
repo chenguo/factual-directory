@@ -38,9 +38,9 @@
 
 (def ^:private ^:const max-search-docs 10000)
 
-(defn query [searcher qstr]
+(defn query [searcher qstr limit]
   (let [query (.parse parser qstr)
-        docs (.search searcher query max-search-docs)]
+        docs (.search searcher query (min limit max-search-docs))]
     (mapv (fn [score-doc]
             (let [doc-n (.doc score-doc)
                   doc (.doc searcher doc-n)]

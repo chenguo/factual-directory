@@ -43,37 +43,42 @@
   (try
     (db/save-search qstr timestamp)))
 
+(defn- text-score-map [lucene-matches]
+  (persistent!
+   (reduce (fn [m match]
+             (assoc! m (:id match) (:score match)))
+           (transient {})
+           lucene-matches)))
+
 (defn- attach-text-scores
   "Attach the Lucene text match score to each doc"
-  [docs lucene-matches]
-  (let [text-scores (persistent!
-                     (reduce (fn [m match]
-                               (assoc! m (:id match) (:score match)))
-                             (transient {})
-                             lucene-matches))]
-    (mapv #(assoc %1 :text-score (get text-scores (:id %))) docs)))
+  [docs text-scores]
+    (mapv #(assoc %1 :text-score (get text-scores (:id %))) docs))
 
-(defn- score-docs [docs matches qstr timestamp]
-  (let [docs (attach-text-scores docs matches)]
+(defn- score-docs [docs text-scores qstr timestamp]
+  (println "qstr" qstr)
+  (let [docs (attach-text-scores docs text-scores)]
     (mapv (fn [doc]
             (let [doc (assoc doc
                         :qstr qstr
                         :qtime timestamp
                         :itime (:timestamp doc))
                   score (predict/score-document doc)]
-              (assoc doc :score score)))
+              (assoc doc :ml-score score)))
           docs)))
 
 (defn- sort-docs
   "Sort descending by score"
   [docs]
-  (sort-by :score #(compare %2 %1) docs))
+  (let [docs (sort-by :text-score #(compare %2 %1) docs)]
+    (println "score sample" (mapv :text-score (take 10 docs)))
+    docs))
 
 (defn- format-docs [docs]
   (mapv #(select-keys % (keys Document)) docs))
 
 (defn- filter-docs [docs]
-  (take 50 docs))
+  (take 100 docs))
 
 (defn- format-resp [docs qstr timestamp]
   {:query qstr
@@ -88,15 +93,16 @@
 (defn- search-lucene [qstr timestamp]
   (let [sec-timestamp (int (/ timestamp 1000))
         fuzzy-qstr (lucene/fuzzify-qstr qstr)
-        matches (lucene/query searcher fuzzy-qstr)]
+        matches (lucene/query searcher fuzzy-qstr 50)]
     (if (seq matches)
-      (-> (mapv :id  matches)
-          db/query-ids
-          (score-docs matches qstr sec-timestamp)
-          sort-docs
-          filter-docs
-          (format-resp qstr timestamp))
-      (format-resp [] qstr timestamp))))
+      (let [text-scores (text-score-map matches)]
+        (-> (mapv :id  matches)
+            db/query-ids
+            (score-docs text-scores qstr sec-timestamp)
+            sort-docs
+            filter-docs
+            (format-resp qstr timestamp)))
+        (format-resp [] qstr timestamp))))
 
 (defn search [qstr]
   (let [timestamp (.getTime (Date.))]

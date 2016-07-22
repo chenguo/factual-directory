@@ -12,7 +12,7 @@
   (let [qstr (:qstr doc)
         doc-id (:id doc)
         fuzzy-qstr (lucene/fuzzify-qstr qstr)
-        id-scores (lucene/query searcher fuzzy-qstr)]
+        id-scores (lucene/query searcher fuzzy-qstr 1000)]
     (some (fn [id-score]
             (when (= (:id id-score) doc-id)
               (:score id-score)))
