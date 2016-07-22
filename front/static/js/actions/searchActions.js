@@ -4,6 +4,9 @@ export const getResults = (searchTerms) => {
   let queryString = qs.stringify({qstr: searchTerms})
   let searchEndpoint = '/search?' + queryString
   return (dispatch) => {
+    dispatch({
+      type: "GET_SEARCH_RESULTS"
+    })
     fetch(searchEndpoint, {
       method: 'GET'
     }).then(response => {
