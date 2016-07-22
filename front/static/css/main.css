@@ -37,3 +37,15 @@ body {
 .result-links a:active {
     text-decoration: none;
 }
+
+.footer-col {
+    width: 100%;
+}
+
+.footer-col a:link {
+    text-decoration: none;
+}
+
+.footer-col a:visited {
+    text-decoration: none;
+}
