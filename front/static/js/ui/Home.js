@@ -3,7 +3,9 @@ import SearchBarContainer from './containers/SearchBarContainer'
 import ResourceDrawerContainer from './containers/ResourceDrawerContainer'
 import NavBarContainer from './containers/NavBarContainer'
 import SearchResultsContainer from './containers/SearchResultsContainer'
+import ProgressBarContainer from './containers/ProgressBarContainer'
 import Footer from './Footer'
+
 
 const styles = {
   container: {

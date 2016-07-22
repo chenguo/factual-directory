@@ -4,7 +4,7 @@ let initialState = {
     timestamp: 0,
     query: ''
   }, 
-  init: true
+  loading: false
 }
 
 const searchReducer = (state = initialState, action) => {
@@ -12,8 +12,10 @@ const searchReducer = (state = initialState, action) => {
     case "RECEIVE_SEARCH_RESULTS":
       return {
         results: action.results,
-        init: false
+        loading: false
       }
+    case "GET_SEARCH_RESULTS":
+      return Object.assign({}, state, {loading: true})
     default:
       return state
   }

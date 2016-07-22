@@ -49,3 +49,8 @@ body {
 .footer-col a:visited {
     text-decoration: none;
 }
+
+.search-emptystate {
+    background-image: url("/resources/skyscrapers.png");
+    background-size: contain;
+}
