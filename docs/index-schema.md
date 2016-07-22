@@ -2,7 +2,7 @@
 
 Notes:
 * by default, ```url``` is used as `id`
-* timestamp is in ms. If none is given, one will be provided
+* timestamp is in seconds. If none is given, one will be provided
 
 ```json
 {
