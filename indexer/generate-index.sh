@@ -5,4 +5,4 @@ echo Creating index at $OUTPUT
 
 lein run \
     --config config.json \
-    --output directory-index
+    --output test-index

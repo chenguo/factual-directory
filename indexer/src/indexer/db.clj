@@ -22,3 +22,17 @@
   (let [db (make-db db-config)
         sql-query (make-query db-config)]
     (j/query db sql-query)))
+
+(defn- make-annotation-query [db-config]
+  (let [index-table (:index-table db-config)
+        query-table (:query-table db-config)
+        annotation-table (:annotation-table db-config)]
+    [(str "SELECT *, cast(extract(epoch from query.timestamp) as integer) FROM " annotation-table
+          " INNER JOIN " index-table " ON (" index-table ".iid = " annotation-table ".iid)"
+          " INNER JOIN " query-table " ON (" query-table ".qid = " annotation-table ".qid)")]))
+
+(defn get-all-annotations [db-config]
+  (let [db (make-db db-config)
+        sql-query (make-annotation-query db-config)]
+    (println sql-query)
+    (j/query db sql-query)))
