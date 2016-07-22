@@ -46,7 +46,11 @@ function makeQuery(indexes) {
     INSERT_FIELDS.forEach(function(field) {
       value = formatInsertValue(index, field);
       values.push(value);
-      rowVars.push('$' + values.length);
+      if (field == 'timestamp') {
+        rowVars.push('to_timestamp($' + values.length + ')');
+      } else {
+        rowVars.push('$' + values.length);
+      }
     });
     valueVars.push('(' + rowVars.join(',') + ')');
   });

@@ -1,8 +1,13 @@
 {
-  "user": "user",
-  "password": "pw",
-  "database": "db_name",
-  "port": 5432,
-  "host": "postges.host",
-  "index-table": "index"
+  "db": {
+    "user": "user",
+    "password": "pw",
+    "database": "db_name",
+    "port": 5432,
+    "host": "postges.host",
+    "index-table": "index",
+    "query-table": "query",
+    "annotation-table": "annotation"
+  },
+  "document-index": "/home/chen/code/factual-directory/indexer/directory-index"
 }

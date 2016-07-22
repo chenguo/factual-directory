@@ -36,10 +36,11 @@
 
 (def ^:private parser (SimpleQueryParser. (EnglishAnalyzer.) "_search"))
 
+(def ^:private ^:const max-search-docs 10000)
+
 (defn query [searcher qstr]
   (let [query (.parse parser qstr)
-        docs (.search searcher query 100)]
-    (println "qstr" qstr "matchs" (.totalHits docs))
+        docs (.search searcher query max-search-docs)]
     (mapv (fn [score-doc]
             (let [doc-n (.doc score-doc)
                   doc (.doc searcher doc-n)]

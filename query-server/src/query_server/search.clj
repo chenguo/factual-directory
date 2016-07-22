@@ -61,7 +61,7 @@
   (let [fuzzy-qstr (lucene/fuzzify-qstr qstr)
         matches (lucene/query searcher fuzzy-qstr)]
     (if (seq matches)
-      (-> (mapv :id  matches)
+      (-> (mapv :id  (take 50 matches))
           db/query-ids
           score-docs
           sort-docs

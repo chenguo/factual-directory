@@ -35,7 +35,9 @@
 
 (defn- make-id-query [ids]
   (let [place-holders (clojure.string/join "," (repeat (count ids) "?"))
-        qstr (str "SELECT * FROM " index-table " WHERE id IN (" place-holders ")")]
+        qstr (str "SELECT id, url, source, title, keywords, manual_tags, description, corpus, "
+                  "cast(extract(epoch from timestamp) as integer) as timestamp "
+                  "FROM " index-table " WHERE id IN (" place-holders ")")]
     (concat [qstr] ids)))
 
 (defn query-ids [ids]
@@ -65,8 +67,7 @@
     (let [qstr (str with-query " UPDATE " annotation-table " SET selected = true WHERE "
                     "qid = (SELECT qid FROM qid) AND iid = (SELECT iid FROM iid)")]
       (try (j/query db [qstr query sec-timestamp selected])
-           (catch Exception e
-             (.printStackTrace e))))))
+           (catch Exception e)))))
 
 (defn- save-unselected
   "If this has a collision (i.e. already marked selected)
