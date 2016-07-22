@@ -8,7 +8,7 @@ function validateId(entry) {
 }
 
 function isString(s) {
-  return typeof s == 'string' && s.length > 0;
+  return typeof s == 'string';
 }
 
 function isNull(s) {
@@ -20,7 +20,7 @@ function validateString(entry, field) {
 }
 
 function validateNonNullString(entry, field) {
-  return isString(entry[field]);
+  return isString(entry[field]) && entry[field].length > 0;
 }
 
 function validateArrayOfStrings(entry, field) {
