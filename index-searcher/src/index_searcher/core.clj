@@ -1,12 +1,11 @@
-(ns query-server.lucene
-  (:require [query-server.config :as conf])
-  (:import org.apache.lucene.document.Document
+(ns index-searcher.core
+  (:import java.util.StringTokenizer
+           org.apache.lucene.document.Document
            org.apache.lucene.index.DirectoryReader
            org.apache.lucene.store.MMapDirectory
            org.apache.lucene.analysis.en.EnglishAnalyzer
            org.apache.lucene.queryparser.simple.SimpleQueryParser
            org.apache.lucene.search.IndexSearcher))
-
 
 (defn- make-path
   [index-path]
@@ -14,23 +13,36 @@
     (java.nio.file.Paths/get
      (java.net.URI. (str "file:///" abs-path)))))
 
-(defn- create-index-searcher
+(defn create-index-searcher
   [index-path]
   (let [directory (MMapDirectory. (make-path index-path))
         reader (DirectoryReader/open directory)]
     (IndexSearcher. reader)))
 
-(def ^:private searcher (create-index-searcher (:document-index conf/config)))
-(println "Loaded searcher" searcher)
+(defn tokenize [qstr]
+  (loop [tokens []
+         token-stream (StringTokenizer. qstr)]
+    (if (.hasMoreTokens token-stream)
+      (recur (conj tokens (.toLowerCase (.nextToken token-stream)))
+             token-stream)
+      tokens)))
+
+(defn fuzzify-qstr
+  [qstr]
+  (let [tokens (tokenize qstr)]
+    (->> (tokenize qstr)
+         (mapcat #(vector % #_(str % "~") (str % "*")))
+         (clojure.string/join " "))))
 
 (def ^:private parser (SimpleQueryParser. (EnglishAnalyzer.) "_search"))
 
-(defn query [qstr]
+(defn query [searcher qstr]
   (let [query (.parse parser qstr)
         docs (.search searcher query 100)]
     (println "qstr" qstr "matchs" (.totalHits docs))
     (mapv (fn [score-doc]
             (let [doc-n (.doc score-doc)
                   doc (.doc searcher doc-n)]
-              (.stringValue (.getField doc "id"))))
+              {:id (.stringValue (.getField doc "id"))
+               :score (.score score-doc)}))
           (.scoreDocs docs))))

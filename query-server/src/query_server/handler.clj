@@ -13,7 +13,7 @@
         (ok (search/search qstr)))
 
    (POST "/search/feedback" []
-         :body [feedback search/Feedback] ;search/Feedback]
+         :body [feedback search/Feedback]
          :summary "Handle search user interaction feedback"
          (ok (search/feedback feedback)))
 

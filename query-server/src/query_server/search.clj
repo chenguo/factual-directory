@@ -1,14 +1,11 @@
 (ns query-server.search
   (:require [clojure.walk :refer [keywordize-keys]]
             [schema.core :as s]
+            [index-searcher.core :as lucene]
             [query-server.config :as conf]
-            [query-server.db :as db]
-            [query-server.lucene :as lucene])
-  (:import
-   java.lang.Long
-   java.util.Date
-   java.util.StringTokenizer)
-)
+            [query-server.db :as db])
+  (:import java.lang.Long
+           java.util.Date))
 
 (s/defschema Echo
   {:query s/Str
@@ -33,16 +30,8 @@
    :timestamp Long
    :results [Document]})
 
-(defn- tokenize [qstr]
-  (loop [tokens []
-         token-stream (StringTokenizer. qstr)]
-    (if (.hasMoreTokens token-stream)
-      (recur (conj tokens (.toLowerCase (.nextToken token-stream)))
-             token-stream)
-      tokens)))
-
 (defn echo [qstr]
-  (let [tokens (tokenize qstr)]
+  (let [tokens (lucene/tokenize qstr)]
     {:query qstr
      :tokens tokens
      :timestamp (.getTime (Date.))}))
@@ -63,26 +52,29 @@
    :results (format-docs docs)
    :timestamp timestamp})
 
+(def ^:private searcher
+  (let [index-path (:document-index conf/config)]
+    (lucene/create-index-searcher index-path)))
+(println "Created searcher" searcher)
+
 (defn- search-lucene [qstr timestamp]
-  (let [tokens (tokenize qstr)
-        ; temporarily disable fuzzy matching
-        fuzzy-tokens (mapcat #(vector % #_(str % "~") (str % "*")) tokens)
-        ids (lucene/query (clojure.string/join " " fuzzy-tokens))]
-    (if (seq ids)
-      (-> (db/query-ids ids)
+  (let [fuzzy-qstr (lucene/fuzzify-qstr qstr)
+        matches (lucene/query searcher fuzzy-qstr)]
+    (if (seq matches)
+      (-> (mapv :id  matches)
+          db/query-ids
           score-docs
           sort-docs
           (format-resp qstr timestamp))
       (format-resp [] qstr))))
 
 (defn- search-pg [qstr timestamp]
-  (let [tokens (tokenize qstr)]
-    (-> qstr
-        tokenize
-        db/query
-        score-docs
-        sort-docs
-        (format-resp qstr timestamp))))
+  (-> qstr
+      lucene/tokenize
+      db/query
+      score-docs
+      sort-docs
+      (format-resp qstr timestamp)))
 
 (defn search [qstr]
   (let [timestamp (.getTime (Date.))]
