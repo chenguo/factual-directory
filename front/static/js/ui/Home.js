@@ -3,12 +3,14 @@ import SearchBarContainer from './containers/SearchBarContainer'
 import ResourceDrawerContainer from './containers/ResourceDrawerContainer'
 import NavBarContainer from './containers/NavBarContainer'
 import SearchResultsContainer from './containers/SearchResultsContainer'
+import Footer from './Footer'
 
 const styles = {
   container: {
     textAlign: 'center',
-    height: '60vh',
-    backgroundColor: 'white',
+    minHeight: '72vh',
+    maxHeight: '90vh',
+    backgroundColor: 'white'
   },
   searchArea: {
     width: '60%',
@@ -16,18 +18,20 @@ const styles = {
   },
   h: {
     color: 'black',
-    fontFamily: 'Roboto'
+    fontFamily: 'Roboto',
+    'height': '100vh'
   },
 };
 
 const Home = () => (
-  <div style={Object.assign(styles.container, styles.h)}>
+  <div style={styles.h}>
     < NavBarContainer />
     < ResourceDrawerContainer />
-    <div style={styles.searchArea}>
+    <div style={Object.assign(styles.container, styles.searchArea)}>
       < SearchBarContainer />
       < SearchResultsContainer />
     </div>
+    < Footer />
   </div>
 );
 

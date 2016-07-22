@@ -3,8 +3,9 @@ import ResultRow from './ResultRow'
 
 let styles = {
   wrapper: {
-    height: '60vw',
-    overflow: 'scroll'
+    height: '100%',
+    overflow: 'scroll',
+    maxHeight: '82vh'
   }
 }
 

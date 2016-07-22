@@ -14,7 +14,7 @@ app.get('/', function (req, res) {
 app.get('/search', function(req, res) {
   qstr = req.query.qstr;
   reqParams = {qstr: qstr};
-  request({url: 'http://10.20.10.146:4001/search', qs:reqParams}, function(err, resp, body) {
+  request({url: 'http://10.20.10.146:4000/search', qs:reqParams}, function(err, resp, body) {
     res.send(body);
   })
 })
@@ -28,7 +28,7 @@ app.post('/feedback', function(req, res) {
     ids: req.body.ids
   }
   request.post({
-    url: 'http://10.20.10.146:4001/search/feedback',
+    url: 'http://10.20.10.146:4000/search/feedback',
     json: true,
     body: payload
   }, function(err, resp, body) {
