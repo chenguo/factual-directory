@@ -5,12 +5,14 @@
            opennlp.tools.stemmer.PorterStemmer))
 
 (defn- tokenize [s]
-  (loop [tokens []
-         token-stream (StringTokenizer. s)]
-    (if (.hasMoreTokens token-stream)
-      (recur (conj tokens (.toLowerCase (.nextToken token-stream)))
-             token-stream)
-      tokens)))
+  (if (nil? s)
+    []
+    (loop [tokens []
+           token-stream (StringTokenizer. s)]
+      (if (.hasMoreTokens token-stream)
+        (recur (conj tokens (.toLowerCase (.nextToken token-stream)))
+               token-stream)
+        tokens))))
 
 (defn- url-tokenize [s]
   (clojure.string/split s #"[^a-zA-Z0-9]"))
@@ -70,8 +72,9 @@
 (defn- time-delta
   "t1 is expected to be more recent than t2"
   [^double t1 ^double t2]
-  (when (pm/> t1 t2)
-    (pm/- t1 t2)))
+  (if (and t1 t2 (pm/> t1 t2))
+    (pm/- t1 t2)
+    0.0))
 
 (defn generate-features [annotation]
   (let [qstr (:qstr annotation)
@@ -103,8 +106,11 @@
   (assoc features :meta
          (select-keys annotation [:qstr :timestamp])))
 
-(defn- feature-map->vector [feature-map]
-  (mapv (fn [[k v]] {:name k :value v})
+(defn- feature-map->vector
+  "Use strings here for Predict library lookup
+  convenience"
+  [feature-map]
+  (mapv (fn [[k v]] {"name" (name k) "value" (double v)})
         feature-map))
 
 (defn- format-features [features annotation]

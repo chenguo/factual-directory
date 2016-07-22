@@ -10,5 +10,6 @@
     "annotation-table": "annotation",
     "pool-size": 25
   },
-  "document-index": "/path/to/documents/lucene/index"
+  "document-index": "/path/to/documents/lucene/index",
+  "search-model": "/path/to/search/model"
 }

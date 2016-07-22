@@ -3,7 +3,9 @@
             [schema.core :as s]
             [index-searcher.core :as lucene]
             [query-server.config :as conf]
-            [query-server.db :as db])
+            [query-server.db :as db]
+            [query-server.predict :as predict]
+            )
   (:import java.lang.Long
            java.util.Date))
 
@@ -41,11 +43,37 @@
   (try
     (db/save-search qstr timestamp)))
 
-(def ^:private score-docs identity)
-(def ^:private sort-docs identity)
+(defn- attach-text-scores
+  "Attach the Lucene text match score to each doc"
+  [docs lucene-matches]
+  (let [text-scores (persistent!
+                     (reduce (fn [m match]
+                               (assoc! m (:id match) (:score match)))
+                             (transient {})
+                             lucene-matches))]
+    (mapv #(assoc %1 :text-score (get text-scores (:id %))) docs)))
+
+(defn- score-docs [docs matches qstr timestamp]
+  (let [docs (attach-text-scores docs matches)]
+    (mapv (fn [doc]
+            (let [doc (assoc doc
+                        :qstr qstr
+                        :qtime timestamp
+                        :itime (:timestamp doc))
+                  score (predict/score-document doc)]
+              (assoc doc :score score)))
+          docs)))
+
+(defn- sort-docs
+  "Sort descending by score"
+  [docs]
+  (sort-by :score #(compare %2 %1) docs))
 
 (defn- format-docs [docs]
   (mapv #(select-keys % (keys Document)) docs))
+
+(defn- filter-docs [docs]
+  (take 50 docs))
 
 (defn- format-resp [docs qstr timestamp]
   {:query qstr
@@ -58,23 +86,17 @@
 (println "Created searcher" searcher)
 
 (defn- search-lucene [qstr timestamp]
-  (let [fuzzy-qstr (lucene/fuzzify-qstr qstr)
+  (let [sec-timestamp (int (/ timestamp 1000))
+        fuzzy-qstr (lucene/fuzzify-qstr qstr)
         matches (lucene/query searcher fuzzy-qstr)]
     (if (seq matches)
-      (-> (mapv :id  (take 50 matches))
+      (-> (mapv :id  matches)
           db/query-ids
-          score-docs
+          (score-docs matches qstr sec-timestamp)
           sort-docs
+          filter-docs
           (format-resp qstr timestamp))
       (format-resp [] qstr timestamp))))
-
-(defn- search-pg [qstr timestamp]
-  (-> qstr
-      lucene/tokenize
-      db/query
-      score-docs
-      sort-docs
-      (format-resp qstr timestamp)))
 
 (defn search [qstr]
   (let [timestamp (.getTime (Date.))]
