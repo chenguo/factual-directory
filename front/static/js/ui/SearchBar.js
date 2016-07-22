@@ -6,7 +6,8 @@ import getResults from '../actions/searchActions'
 const searchStyles = {
   wrapper: {
     width: "100%",
-    display: "flex"  
+    display: "flex",
+    marginTop: '15px'
   },
   icon: {
     marginRight: "15px"
