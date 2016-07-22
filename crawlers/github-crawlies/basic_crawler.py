@@ -1,11 +1,11 @@
 import base64
 import requests
-import time 
+import time
 
 
 API_ENDPOINT = 'https://api.github.com/orgs/factual/repos'
 INDEX_API = 'http://10.20.10.146:3000/indexes'
-TOKEN = open('.token.txt', 'r').read()
+TOKEN = open('.token.txt', 'r').read().strip()
 CRAWL_SOURCE = 'githubcrawler'
 DEFAULT_KEYWORDS = ['github', 'repo']
 
@@ -58,4 +58,5 @@ def parse_header_link(header_link):
   return link.strip('<>'), relation[4:].strip('"')
 
 if __name__ == '__main__':
-  do_parse()
+  resp = do_parse()
+  print resp
