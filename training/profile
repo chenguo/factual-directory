@@ -1,0 +1,12 @@
+RUN_NAME=test
+TRAIN_DATA=`pwd`/features.json
+TEST_DATA=
+
+PREDICT_PATH=/home/chen/code/predict
+
+MODEL_TYPE=random_forest
+MODE=binary
+TRAIN_CMD="python -m predict.models.random_forest.train"
+PREDICT_CMD="python -m predict.models.random_forest.evaluate"
+TRAIN_PARAMS=`pwd`/params.json
+TRANSFORM_CONFIG=`pwd`/transforms.json
