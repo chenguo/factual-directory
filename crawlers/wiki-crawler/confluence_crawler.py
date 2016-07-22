@@ -11,7 +11,6 @@ SEARCH_PARAMS = {
   'expand': 'space,body.export_view'
 }
 DEFAULT_KEYWORDS = ['confluence', 'wiki']
-SEEN = set()
 
 def do_parse():
   index_buffer = []
@@ -33,19 +32,21 @@ def get_indexes():
   next_page_url = "/rest/api/content?expand=space%2Cbody.export_view%2Cdescription&limit=100&start=100"
   num_indexes = 0
   while next_page_url is not None:
-    result = get(next_page_url).json()
-    next_page_url = get_next_page(result)
-    for res in result['results']:
-      num_indexes += 1
-      yield make_index(res)
+    response = get(next_page_url)
+    if response.status_code == 200:
+      result = response.json()
+      next_page_url = get_next_page(result)
+      for res in result['results']:
+        num_indexes += 1
+        yield make_index(res)
+    else:
+      print response.text, next_page_url
+      break
   print 'saw {0} indexes'.format(num_indexes)
 
 def make_index(json):
   corpus = Soup(json['body']['export_view']['value']).text.split()
   url = json['_links']['webui']
-  if url in SEEN:
-    print url
-  SEEN.add(url)
   return {
     'id': 'confluence:' + url,
     'url': HOST + url,
