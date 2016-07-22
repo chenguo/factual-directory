@@ -14,6 +14,6 @@
       (println usage)
       (System/exit 1))
     (let [db-config (config/read-config-file (:config arg-map))
-          index-entries (db/get-all-entries db-config)]
+          index-entries (db/get-all-entries (:db db-config))]
       (println "read" (count index-entries) "index entries")
       (lucene/build-index index-entries (:output arg-map)))))

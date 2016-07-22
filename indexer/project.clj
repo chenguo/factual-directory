@@ -14,5 +14,6 @@
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.apache.lucene/lucene-core "6.1.0"]
                  [org.apache.lucene/lucene-analyzers-common "6.1.0"]
-                 [factual.directory/featurize "0.0.2-SNAPSHOT"]]
+                 [factual.directory/featurize "0.0.2-SNAPSHOT"]
+                 [factual.directory/index-searcher "0.0.1-SNAPSHOT"]]
   :main indexer.core)
