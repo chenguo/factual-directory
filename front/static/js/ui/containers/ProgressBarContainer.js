@@ -6,7 +6,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 const ProgressBar = (props) => {
   console.log(props.loading)
   return (
-    <LinearProgress mode={props.loading? "indeterminate" : "determinate"} style={{width: '80%', margin: 'auto'}} />
+    props.loading ? <LinearProgress mode="indeterminate" style={{width: '95%', margin: 'auto'}} /> : null
   )
 }
 const mapStateToProps = (state) => {

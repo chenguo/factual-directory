@@ -31,6 +31,7 @@ const Home = () => (
     < ResourceDrawerContainer />
     <div style={Object.assign(styles.container, styles.searchArea)}>
       < SearchBarContainer />
+      < ProgressBarContainer />
       < SearchResultsContainer />
     </div>
     < Footer />

@@ -3,6 +3,11 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import Chip from 'material-ui/Chip';
 import Divider from 'material-ui/Divider';
+import Avatar from 'material-ui/Avatar';
+import FontIcon from 'material-ui/FontIcon';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
 
 let styles = {
   resultCard: {
@@ -54,7 +59,23 @@ class ResultRow extends React.Component {
     this.setState({expanded: expanded});
   };
 
+  addManualLabel(text) {
+    this.setState({manual_tags: manual_tags.concat([text])})
+  }
+
   render() {
+    let codeAvatar = <Avatar icon={<FontIcon className="material-icons">code</FontIcon>} />
+    let githubAvatar = <Avatar icon={<FontIcon className="fa fa-github"></FontIcon>} />
+    let hdfsAvatar = <Avatar icon={<FontIcon className="material-icons">cloud circle</FontIcon>} />
+    let wikiAvatar = <Avatar icon={<FontIcon className="material-icons">description</FontIcon>} />
+
+    var icon = wikiAvatar
+    if (this.state.url.indexOf("github.com") != -1) {
+      icon = codeAvatar
+    } else if (this.state.url.indexOf("hdfs-redirect") != -1) {
+      icon = hdfsAvatar
+    }
+
     let fixedTags = (this.state.expanded ? [] : this.state.manual_tags).concat(this.state.keywords).map( (tag, i) => (
         <Chip onTouchTap={(event) => console.log('clicked')}
               style={styles.chip}
@@ -86,7 +107,9 @@ class ResultRow extends React.Component {
           <CardHeader title={resultTitle}
                       subtitle={this.state.description}
                       showExpandableButton={true}
-                      actAsExpander={true} />
+                      actAsExpander={true} 
+                      avatar={icon}
+                      />
           <Divider />
           <CardText style={styles.descriptionChips} >
             {fixedTags}

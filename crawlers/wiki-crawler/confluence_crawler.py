@@ -1,5 +1,6 @@
 import requests
-import time
+from dateutil import parser
+import datetime
 from bs4 import BeautifulSoup as Soup
 
 CRAWL_SOURCE = 'confluencecrawler'
@@ -29,7 +30,7 @@ def test_parse():
     print index['url'], index['title']
 
 def get_indexes():
-  next_page_url = "/rest/api/content?expand=space%2Cbody.export_view%2Cdescription&limit=100&start=100"
+  next_page_url = "/rest/api/content?expand=space%2Cbody.export_view%2Chistory.lastUpdated&limit=100"
   num_indexes = 0
   while next_page_url is not None:
     response = get(next_page_url)
@@ -45,8 +46,9 @@ def get_indexes():
   print 'saw {0} indexes'.format(num_indexes)
 
 def make_index(json):
-  corpus = Soup(json['body']['export_view']['value']).text.split()
+  corpus = ' '.join(remove_comments(Soup(json['body']['export_view']['value']).findAll(text=True))).split()
   url = json['_links']['webui']
+  last_updated = parser.parse(json['history']['lastUpdated']['when'])
   return {
     'id': 'confluence:' + url,
     'url': HOST + url,
@@ -55,7 +57,7 @@ def make_index(json):
     'description': ' '.join(corpus[:20]),
     'corpus': ' '.join(corpus),
     'manual_tags': [],
-    'timestamp': int(time.time()),
+    'timestamp': get_epoch_seconds(last_updated),
     'source': CRAWL_SOURCE
   }
 
@@ -65,11 +67,11 @@ def get_next_page(json):
 def get(endpoint):
   return requests.get(HOST + endpoint, auth=(USER, PASS))
 
-def parse_wiki_page(soup):
-  pass 
+def get_epoch_seconds(t):
+  return int((t.replace(tzinfo=None) - datetime.datetime(1970, 1, 1)).total_seconds())
 
-def get_titles(soup):
-  return [title.text for title in soup.find_all('h1')]
+def remove_comments(text):
+  return [string for string in text if not string.startswith('/*')]
 
-# if __name__ == '__main__':
-#   print do_parse()
+if __name__ == '__main__':
+  print do_parse()

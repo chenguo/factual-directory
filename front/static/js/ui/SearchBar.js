@@ -24,14 +24,16 @@ const searchTerms = [
 const SearchBar = (props) => (
   <div style={searchStyles.wrapper}>
     <img style={searchStyles.icon} src="/resources/factual_logo_notext.png"/>
-    <AutoComplete
-      floatingLabelText="Search factual"
-      filter={AutoComplete.fuzzyFilter}
-      dataSource={searchTerms}
-      maxSearchResults={5}
-      fullWidth={true}
-      onNewRequest={ props.doSearch }
-    />
+    <div style={{marginRight: '20px', width: '100%'}}>
+      <AutoComplete
+        floatingLabelText="Search factual"
+        filter={AutoComplete.fuzzyFilter}
+        dataSource={searchTerms}
+        maxSearchResults={5}
+        fullWidth={true}
+        onNewRequest={ props.doSearch }
+      />
+    </div>
   </div>
 );
 
