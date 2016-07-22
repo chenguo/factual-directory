@@ -13,6 +13,7 @@ Notes:
   "description": "Repository of Factual internal data",
   "corpus": "Body of document, should be empty for top level domains like the wiki",
   "manual_tags": [],
-  "timestamp": 1469054237
+  "timestamp": 1469054237,
+  "source": "wikicrawler"
 }
 ```
